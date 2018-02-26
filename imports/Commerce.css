@@ -1,0 +1,40 @@
+.change:hover {
+	color:darkgray;
+	font-weight: bold;
+	font-size:20px;
+}
+
+
+.front {
+	background-attachment: fixed;
+	width: 100%
+}
+
+.changes:hover {
+	color:darkgray;
+	font-weight: bold;
+	font-size:20px;
+	text-decoration: underline;
+}
+
+.block {
+	display: block;
+}
+
+.details p {
+	font-size: 18px;
+	
+	
+}
+
+.details h2 {
+	font-weight: bold;
+	text-decoration: underline;
+	font-size: 30px;
+	
+}
+
+.details {
+	margin: 40px;
+}
+
