@@ -6,7 +6,8 @@ export default class Navbar extends React.Component{
 	constructor(){
 		super()
 			this.state = {
-				works: "Receiving props from Navbar!"
+				
+			
 			}
 		
 	}
@@ -14,8 +15,9 @@ export default class Navbar extends React.Component{
 
 	
 	handleClick(e){
-	 
+	   debugger;
 		var name = e.target.textContent
+		
 		
 		if(name == "Home") {
 			name = ""
@@ -25,7 +27,7 @@ export default class Navbar extends React.Component{
 		    this.props.history.push({
 				pathname: url,
 			
-				state:{works: this.state.works}
+				state:{admin: this.state.admin}
 									})
 	    }
 	
@@ -55,7 +57,11 @@ export default class Navbar extends React.Component{
 					<li className="change"  style={style} onClick={this.handleClick.bind(this)}>Shop</li>
 					<li className="change"  style={style} onClick={this.handleClick.bind(this)}>About</li>
 					<li className="change"  style={style} onClick={this.handleClick.bind(this)}>Cart</li>
-					<Drop  style={style} click = {this.handleClick.bind(this)}/>
+					<Drop  
+						style={style} 
+						click = {this.handleClick.bind(this)}
+						history = {this.props.history}
+						/>
 				</ul>
 			</div>
 			

@@ -10,6 +10,8 @@ import Account from './Account'
 import SignIn from './SignIn'
 import OrderHistory from './OrderHistory'
 import Favourites from './Favourites'
+import Admin from './Admin'
+import Checkout from './Checkout'
 
 const routes    = () => {
 	
@@ -23,6 +25,8 @@ const routes    = () => {
 	  <Route path   = "/Sign In"          component = {SignIn}/>
 	  <Route path   = "/Orders"           component = {OrderHistory}/>
 	  <Route path   = "/Favourites"       component = {Favourites}/>
+	  <Route path   = "/Admin"            component = {Admin}/>
+	  <Route path   = "/Checkout"         component = {Checkout}/>
 	
 	</div>
          </Router>

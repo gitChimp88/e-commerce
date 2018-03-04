@@ -3,7 +3,35 @@ import Navbar from './Navbar'
 import "./Commerce.css"
 
 export default class Account extends React.Component{
+	constructor(){
+		super()
+		this.state = {
+			update: false,
+			details: [],
+			name: '',
+			address: '',
+			email: ''
+		}
+	}
 	
+	
+	componentDidMount(){
+		
+       /*
+	   
+	   this isnt working look into it
+		Tracker.autorun(()=>{
+			debugger;
+			
+			var user = Meteor.user()
+			const name = user.profile.name
+		    const address = user.profile.address
+			const email = user.emails[0].address
+			
+			this.setState({name, address, email})
+		})*/
+	
+	}
 	
 	
 	handle(e){
@@ -20,6 +48,10 @@ export default class Account extends React.Component{
 			 })
 	    }
 	
+	updateState(){
+		var update = this.state.update
+		this.setState({update: !update})
+	}
 	
 	
 	render(){
@@ -52,6 +84,13 @@ export default class Account extends React.Component{
 			
 		}
 		
+		const bl = {
+			marginTop: "20px",
+			display: "block"
+		}
+		
+		
+		
 		return( 
 			<div>
 				<Navbar
@@ -83,11 +122,17 @@ export default class Account extends React.Component{
 				
 				<div className="details">
 					<h2>Details</h2>
-					<p>Name:</p>
+					<p className="marg">Name: {this.state.name}</p>
+					{this.state.update == true ? <input/> : null}
 				    <p>UserName:</p>
-				    <p>Email:</p>
+					{this.state.update == true ? <input/> : null}
+				    <p>Email: {this.state.email}</p>
+					{this.state.update == true ? <input/> : null}
+					<p>Address: {this.state.address}</p>
+					{this.state.update == true ? <input/> : null}
 				    <p>Phone:</p>
-					<button className="btn btn-success">Update details</button>
+					{this.state.update == true ? <input/> : null}
+					{this.state.update == false ? <button style={bl} className="btn btn-success" onClick={this.updateState.bind(this)}>Update details</button> : <button className="btn btn-success" style={bl} onClick={this.updateState.bind(this)}>Submit</button> }
 				</div>
 				
 				

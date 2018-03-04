@@ -2,8 +2,21 @@ import React from 'react'
 import Navbar from './Navbar'
 import "./Commerce.css"
 import Drop2 from './Drop2'
+import IndividualProduct from './IndividualProduct'
+import {Products} from './api/pics'
 
 export default class Shop extends React.Component{
+	
+	constructor(){
+		super()
+		this.state = {
+			pictures: [],
+			chosenCategory: 'All Items',
+			order: false,
+		
+			
+		}
+	}
 	
 	
 	 clicker(e){
@@ -19,6 +32,30 @@ export default class Shop extends React.Component{
 				pathname: url,
 			})
 	    }
+	
+	componentWillMount(){
+        
+		Tracker.autorun(()=>{
+			var pictures = Products.find({}).fetch()
+			this.setState({pictures: pictures})
+		})
+	
+	}
+	
+	chooseCategory(e){
+		
+		var category = e.target.textContent
+		Tracker.autorun(()=>{
+			var pictures = Products.find({}).fetch()
+			this.setState({pictures: pictures})
+		})
+		
+		this.setState({chosenCategory: category})
+	}
+	
+	setOrder(arr){
+		this.setState({pictures:arr})
+	}
 	
 	
 	
@@ -72,6 +109,13 @@ export default class Shop extends React.Component{
 			marginBottom: "10px"
 		}
 		
+		const centered = {
+			textAlign: "center",
+			display: "inline-block",
+			margin: "20px"
+		}
+		
+		
 		
 		return( 
 			<div>
@@ -82,18 +126,61 @@ export default class Shop extends React.Component{
 				<h2 style={secondheader}>Shop</h2>
 				
 				<ul className="text-center">
-					<li style={style} className="changes">All Items</li>
-					<li style={style} className="changes">Rings</li>
-					<li style={style} className="changes">Bracelets</li>
-					<li style={style} className="changes">Necklaces</li>
-					<Drop2/>
+					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>All Items</li>
+					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>Rings</li>
+					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>Bracelets</li>
+					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>Necklaces</li>
+					<Drop2
+						 pictures = {this.state.pictures}
+						setOrder = {this.setOrder.bind(this)}
+						/>
 				</ul>
 				<br/>
 				<hr/>
 				
 				
+				<div className="container-fluid">
+					
+					
+					
+					{this.state.pictures.map((ele, i)=>{
+						var category = this.state.chosenCategory
+						
+						if(category == "All Items"){
+							 return (
+						 <div key={i} style={centered}>
+							  <IndividualProduct
+							 url = {ele.url}
+							 name = {ele.name}
+							 price = {ele.price}
+							 category = {ele.category}
+							 stock = {ele.stock}
+							 id = {ele._id}
+							 chosen = {this.state.chosenCategory}
+						     sold={ele.sold}
+							
+							 />
+						 </div>
+							 )	 
+						} else if(category == ele.category){
+								 return (
+						 <div key={i} style={centered}>
+							  <IndividualProduct
+							 url = {ele.url}
+							 name = {ele.name}
+							 price = {ele.price}
+							 category = {ele.category}
+							 stock = {ele.stock}
+							 id = {ele._id}
+							 chosen = {this.state.chosenCategory}
+							 sold={ele.sold}
+							 />
+						 </div>
+							 )	 
+						} 
+					})}
+				</div>
 				
-				<h1 className="text-center">Products go here!!</h1>
 				
 				<br/>
 				<hr/>

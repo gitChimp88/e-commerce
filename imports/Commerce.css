@@ -23,8 +23,8 @@
 
 .details p {
 	font-size: 18px;
-	
-	
+	margin-top: 18px;
+	margin-bottom: 0;
 }
 
 .details h2 {
@@ -37,4 +37,6 @@
 .details {
 	margin: 40px;
 }
+
+
 
