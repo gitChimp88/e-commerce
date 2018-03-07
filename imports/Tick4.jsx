@@ -4,7 +4,7 @@ import React from 'react'
 
 
 
-export default class Tick2 extends React.Component {
+export default class Tick4 extends React.Component {
 	
     constructor(){
 		super()
@@ -28,7 +28,7 @@ export default class Tick2 extends React.Component {
 	
 		stop(){
 			clearInterval(this.state.intervalId);
-		   this.props.changeClicked()
+		   this.props.changeConfirm()
 		}
 
 		timer() {
@@ -68,7 +68,7 @@ export default class Tick2 extends React.Component {
 		
 		return ( 
 			   <div style={centers}>
-					<p style={green}>Signed In! </p>
+					<p style={green}>Message sent!</p>
 				 <img height="50" width="50" src="/images/checked.png"></img>
 			     </div>
 			)

@@ -1,6 +1,8 @@
 import React from 'react'
 import {Products} from './api/pics'
 import {ShoppingCart} from './api/ShoppingCart'
+import {Orders} from './api/orders'
+import StripeCheckout from 'react-stripe-checkout';
 import "./Commerce.css"
 
 
@@ -18,17 +20,22 @@ export default class Checkout extends React.Component {
 					cart: [],
 					productId: [],
 					subtotal: [],
-					signedIn: false
+					signedIn: false,
+					customerName: '',
+					customerEmail: '',
+					customerAddress: '',
+					name: '',
+					email: '',
+					address: ''
+					
 				}
-		
+		this.checkOut = this.checkOut.bind(this)
 	}
 	
 	
 	handle(e){
-	 
-	   
 		
-		  var url = "/Cart"
+	     var url = "/Cart"
 			
 		    this.props.history.push({
 				pathname: url,
@@ -38,21 +45,32 @@ export default class Checkout extends React.Component {
 	
 	
 	componentWillMount(){
-        
+        debugger;
 		Tracker.autorun(()=>{
 			var cart = ShoppingCart.find({}).fetch()
 			this.setState({cart: cart})
 			
 		})
 		
+		var user = Meteor.user()
+		if(user != null){
+			this.setState({signedIn: true})
+			var user = Meteor.user()
+			const customerName = user.profile.name
+		    const customerAddress = user.profile.address
+			const customerEmail = user.emails[0].address
+			
+			this.setState({customerName, customerAddress, customerEmail})
+			
+		}
+		
 	}
 	
 	
 	
 	
-	
 	componentDidMount(){
-		
+		debugger;
 		const cart = this.state.cart
 		cart.map((item)=>{
 			var total = this.state.subtotal
@@ -63,26 +81,111 @@ export default class Checkout extends React.Component {
 		var sum = this.state.subtotal.reduce((a, b) => a + b, 0);
 		var total = parseInt(sum)
 		this.setState({subtotal: total})
+		
+		
+		
+	}
+	
+	
+    onToken(token, amount){
+		debugger;
+		amount = this.props.location.state.subtotal;
+      Meteor.call(
+          'StripeChargeMethod',
+          token, 
+          amount,
+		
+          (err,data)=>{ 
+             if(err){
+             //as always place a debugger here so that you can see what the error is
+               debugger
+			   console.log('error')
+             }else if(data){
+             //debugger to check the data
+                if(data.status == "succeeded"){
+                  console.log('success, update stock')
+				 this.checkOut()
+            }else if(data.type =='StripeInvalidRequestError'){
+				debugger;
+                  console.log('invalid request')
+             }
+            }
+          }
+      )
+
+  }
+	
+	shippingDetails(){
+		var name = this.refs.name.value
+		var email = this.refs.email.value
+		var address = this.refs.address.value
+		
+		this.setState({name: name})
+		this.setState({email: email})
+		this.setState({address: address})
 	}
 	
 	
 	
 	checkOut(){
 		//this updates stock and clears the cart, should be activated after payment
-		const cart = this.state.cart
 		
+		console.log("called from successful payment, update stock")
+		debugger;
+		
+		const cart = this.state.cart
 		cart.map((item)=>{
 			var updateStock = item.stock - item.quantity;
 			var productId = item.productId;
 			var ident = item._id;
 			var sold = item.sold + item.quantity;
 			
+			
+			var url = item.url
+			var product = item.name
+			var price = item.price
+			var quantity = item.quantity
+			var address = ''
+			var email = ''
+			var name = ''
+			if(Meteor.userId()){
+				 name = this.state.customerName
+				 address =  this.state.customerAddress
+			     email = this.state.customerEmail
+			} else {
+				name = this.state.name
+				address = this.state.address
+				email = this.state.email 	
+			}
+			
+			
+			
+			
 			Meteor.call('updateStock', productId, updateStock, sold, (err,done)=>{
                         console.log(err,done)
                 })
 			
+			Meteor.call('addOrder', url, name, price, quantity, address, email, product, (err,done)=>{
+                        console.log(err,done)
+                })
+			
 		    ShoppingCart.remove({_id:ident})
+			
+			
+			
 		})
+		
+		if(Meteor.userId()){
+				this.props.history.push({
+				pathname: "/orders",
+			 })
+		} else {
+				this.props.history.push({
+				pathname: "/",
+			 })
+		}
+			
+		
 	}
 	
 	
@@ -107,7 +210,8 @@ export default class Checkout extends React.Component {
 		
 		const center = {
 			marginTop:"30px",
-			textAlign: "center"
+			textAlign: "center",
+			fontWeight: "bold"
 		}
 		
 		const but = {
@@ -139,6 +243,17 @@ export default class Checkout extends React.Component {
 			    display: "block",
 			    margin: "0 auto"
 		  }
+		
+		const details = {
+			textAlign: "center",
+		    margin: "30px",
+			backgroundColor: "azure",
+			border: "1px solid black",
+			borderRadius: "10px",
+			width: "50%",
+			margin: "0 auto"
+			
+		}
 		
 		
 		
@@ -185,19 +300,27 @@ export default class Checkout extends React.Component {
 				<div>
 				 <h1 style={header}>Shipping Details</h1>
 					<p style={center}>Name:</p>
-					{this.state.signedIn == false ? <input style={boxes}/> : null}
+					{this.state.signedIn == false ? <input ref="name" onChange={this.shippingDetails.bind(this)} style={boxes}/> : <h1 style={details}>{this.state.customerName}</h1>}
 					<p style={center}>Email:</p>
-					{this.state.signedIn == false ? <input style={boxes}/> : null}
+					{this.state.signedIn == false ? <input ref="email" onChange={this.shippingDetails.bind(this)} style={boxes}/> : <h2 style={details}>{this.state.customerEmail}</h2>}
 					<p style={center}>Address:</p>
-					{this.state.signedIn == false ? <textarea rows="4" cols="50" style={boxes}></textarea> : null}
+					{this.state.signedIn == false ? <textarea ref="address" onChange={this.shippingDetails.bind(this)} rows="4" cols="50" style={boxes}></textarea> : <h2 style={details}>{this.state.customerAddress}</h2>}
 					<p style={center}>Telephone:</p>
-					{this.state.signedIn == false ? <input style={boxes}/> : null}
+					{this.state.signedIn == false ? <input style={boxes}/> : <input style={boxes}/>}
 				
 				</div>
 				
 				<div style={center}>
-					<button className="btn btn-success" style={but} onClick={this.checkOut.bind(this)}>Pay with Card</button>
+					<StripeCheckout style={but}
+						
+						token={this.onToken.bind(this)}
+						stripeKey   =  "pk_test_xfdBYsU6VCE6VybteJ1kICA5"
+						amount      =  {this.props.location.state.subtotal * 100}
+						email       =  {this.state.customerEmail}
+						currency    = "GBP"
+						/>
 				    <button className="btn btn-success" style={but} onClick={this.handle.bind(this)}>Back</button>
+					
 				</div>
 				
 			  

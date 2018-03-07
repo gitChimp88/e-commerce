@@ -35,7 +35,7 @@ export default class CartProduct extends React.Component {
 	}
 	
 	addQuantity(){
-		
+		debugger;
 		var ident = this.props.ident
 		if(this.props.quantity < this.props.stock){
 			ShoppingCart.update({_id:ident},{ $inc:{ quantity: + 1 }

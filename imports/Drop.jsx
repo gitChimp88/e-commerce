@@ -7,8 +7,8 @@ export default class Drop extends React.Component {
 	constructor(){
 		super()
 			this.state = {
-				admin: false
-			
+				admin: false,
+				loggedIn: false
 		}
 	}
 	
@@ -16,11 +16,15 @@ export default class Drop extends React.Component {
 	componentWillMount(){
         
 		Tracker.autorun(()=>{
-			
-			
-			
+			debugger;
 			if(Roles.userIsInRole(Meteor.userId(), ['admin'], undefined)){
 				this.setState({admin: true})
+			} if(!Roles.userIsInRole(Meteor.userId(), ['admin'], undefined)){
+				this.setState({admin: false})
+			} if(Meteor.userId()){
+				this.setState({loggedIn: true})
+			} else if(!Meteor.userId()){
+				this.setState({loggedIn: false})
 			}
 			
 		})
@@ -46,6 +50,7 @@ export default class Drop extends React.Component {
 	handleClick(){
 		
 			Meteor.logout()
+		this.setState({admin: false})
 		  var url = "/"
 		  this.props.history.push({
 				pathname: url,
@@ -69,8 +74,8 @@ export default class Drop extends React.Component {
 			 <Dropdown style={style} text='Accounts' pointing className='link item change'>
       <Dropdown.Menu>
         
-       
-        <Dropdown.Item onClick={this.handle.bind(this)}>My Account</Dropdown.Item>
+       {this.state.loggedIn == true ? <Dropdown.Item onClick={this.handle.bind(this)}>My Account</Dropdown.Item> : null }
+        
         <Dropdown.Item onClick={this.handle.bind(this)}>Sign In</Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item onClick={this.handleClick.bind(this)}>Sign out</Dropdown.Item>

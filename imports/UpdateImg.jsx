@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class UploadImages extends React.Component{
+export default class UpdateImg extends React.Component{
 	
 		constructor(){
 			super()
@@ -28,7 +28,7 @@ export default class UploadImages extends React.Component{
 					
 					var url = result[0].secure_url
 					this.setState({url: url})
-					this.props.setUrl(this.state.url)
+				
 					this.props.setIt(this.state.url)
                 }
             }.bind(this));
@@ -45,7 +45,7 @@ export default class UploadImages extends React.Component{
 								<hr/>
 								<button className ="ui button"
 										onClick={this.uploadWidget.bind(this)}>
-									add Product image
+									Update Product image
 								</button>
 								
 							<hr/>

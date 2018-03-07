@@ -1,5 +1,6 @@
 import React from 'react'
-import {Different} from './api/pics'
+import {Starred} from './api/favourites'
+import IndividualFavour from './IndividualFavour'
 
 import Navbar from './Navbar'
 
@@ -11,8 +12,7 @@ export default class Favourites extends React.Component {
 					url: '',
 					name: '',
 					price: '',
-					category: '',
-					pictures: []
+				    favourites: []
 				}
 		
 	}
@@ -28,6 +28,16 @@ export default class Favourites extends React.Component {
 				pathname: url,
 			 })
 	    }
+	
+	componentWillMount(){
+        debugger;
+		Tracker.autorun(()=>{
+			var favourites = Starred.find({}).fetch()
+			this.setState({favourites: favourites})
+			
+		})
+		
+	}
 	
 	
 	
@@ -59,6 +69,17 @@ export default class Favourites extends React.Component {
 			margin: "10px"
 		}
 		
+		const cents = {
+			textAlign: "center"
+		}
+		
+		const cents2 = {
+			display: "inline-block",
+			marginLeft: "20px",
+			marginRight: "20px"
+		}
+		
+		
 		return( 
 			
 			<div>
@@ -71,7 +92,36 @@ export default class Favourites extends React.Component {
 					     <h1 style={header}>Favourites</h1>
 				</div>
 				
-				<h1 className="text-center">Pics with details go here</h1>
+				
+				
+				<div style={cents}>
+				{this.state.favourites.map((ele, i)=>{
+					
+					
+					if(ele.userId == Meteor.userId()){
+						 return (
+								  <div key={i} style={cents2}>
+								   
+								    <IndividualFavour
+										name={ele.name}
+								        url={ele.url}
+									    price={ele.price}
+									    id={ele._id}
+										quantity={ele.quantity}
+										ident={ele.productId}
+										stock={ele.stock}
+										sold={ele.sold}
+										/>
+								    </div>   
+						 
+							 )	 
+					}
+					
+					
+							
+						
+					})}
+					</div>
 				
 				
 				

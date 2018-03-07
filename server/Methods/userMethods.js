@@ -1,7 +1,11 @@
 import { Meteor }       from 'meteor/meteor'
 import { Products }   from '../../imports/api/pics'
 import {Accounts}       from 'meteor/accounts-base'
-import { Profile }   from '../../imports/api/profile'
+import { Starred }   from '../../imports/api/favourites'
+import {Orders} from '../../imports/api/orders'
+import { Email } from 'meteor/email'
+
+
 
 
 Meteor.methods({
@@ -15,11 +19,12 @@ Meteor.methods({
                 })
         },
 	
-	updatePic:function(id, name, price, category, stock){
+	updatePic:function(id, name, price, category, stock, url){
 			  console.log("updatePic meteor method the id is = ", id)
-			  Products.update({_id:id},{ $set:{ name:name, price:price, category:category, stock:stock }
+			  Products.update({_id:id},{ $set:{ name:name, price:price, category:category, stock:stock, url:url }
 			  })
 		},
+	
 	
 	updateStock:function(id, stock, sold){
 		Products.update({_id:id},{ $set:{ stock:stock, sold:sold }
@@ -40,15 +45,60 @@ Meteor.methods({
                             }
 		  })
     },
-	addProfileInfo: function(userId, name, email, role){
-		console.log("addProfileInfo meteor method called from the server")
-		Profile.insert({userId, name, email, role},(err,done)=>{
+	
+	createRole: function(id, role){
+		Roles.addUsersToRoles(id, role);
+	},
+	 updateUser: function (id, name, address) {
+          Meteor.users.update( {_id: id}, {$set: { "profile.name": name, "profile.address": address }})
+    },
+	
+	addFavourite: function(name, price, url, productId, stock, quantity, sold){
+		console.log("addFavourite meteor method called from the server")
+		var userId = this.userId
+		Starred.insert({userId, name, price, url, productId, stock, quantity, sold},(err,done)=>{
 			console.log(err + " id = " + done)
 		});
 	},
-	createRole: function(id, role){
-		Roles.addUsersToRoles(id, role);
-	}
+	
+	removeFavourite: function(id){
+		console.log("removeFavourite meteor method called from the server, id = ", id)
+                Starred.remove({_id:id})
+	},
+	
+	addOrder: function(url, name, price, quantity, address, email, product){
+		console.log("addOrder meteor method called from the server")
+		
+		if(this.userId){
+			var user = this.userId
+			Orders.insert({user, url, name, price, quantity, address, email, product},(err,done)=>{
+			console.log(err + " id 1= " + done)
+		});
+		} else {
+			Orders.insert({url, name, price, quantity, address, email, product},(err,done)=>{
+			console.log(err + " id 2 = " + done)
+		});
+		}
+	},
+	
+	sendEmail: function(to, from, subject, text) {
+    // Make sure that all arguments are strings.
+    
+		     
+ 
+			 this.unblock();
+
+             Email.send({ to, from, subject, text });
+			
+		  
+
+   
+  }
+	
+		
+		
+	
+	
 	
 
 	

@@ -4,7 +4,7 @@ import React from 'react'
 
 
 
-export default class Tick2 extends React.Component {
+export default class ColorStar extends React.Component {
 	
     constructor(){
 		super()
@@ -28,7 +28,7 @@ export default class Tick2 extends React.Component {
 	
 		stop(){
 			clearInterval(this.state.intervalId);
-		   this.props.changeClicked()
+		   this.props.setColor()
 		}
 
 		timer() {
@@ -48,13 +48,10 @@ export default class Tick2 extends React.Component {
 		
 		
 		
-		const green = {
-			color: "green",
+		const yellow = {
+			color: "gold",
 			fontWeight: "bold",
-			fontSize: "25px",
-			display: "inline-block",
-			marginTop: "10px",
-			marginRight: "20px"
+			fontSize: "18px"
 			
 		}
 		
@@ -68,8 +65,8 @@ export default class Tick2 extends React.Component {
 		
 		return ( 
 			   <div style={centers}>
-					<p style={green}>Signed In! </p>
-				 <img height="50" width="50" src="/images/checked.png"></img>
+					<p style={yellow}>Added to Favourites!</p>
+				 <img height="25" width="25" src="/images/colorStar.png"></img>
 			     </div>
 			)
 	}

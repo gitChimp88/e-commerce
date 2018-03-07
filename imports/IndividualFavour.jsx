@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Form, Grid, Image, Transition } from 'semantic-ui-react'
 import {ShoppingCart} from './api/ShoppingCart'
 import Tick from './Tick'
-import ColorStar from './ColorStar'
-import MustLogIn from './MustLogIn'
 
 
 
@@ -11,13 +9,12 @@ const transitions = ['jiggle', 'flash', 'shake', 'pulse', 'tada', 'bounce']
 
 const options = transitions.map(name => ({ key: name, text: name, value: name }))
 
-export default class Slide extends React.Component {
+export default class IndividualFavour extends React.Component {
 	constructor(){
 		super()
 		this.state = {
 			animation: transitions[4], duration: 1000, visible: true,
-		    color: false,
-			mustLogIn: false
+		    color: false
 		}
 		
 	}
@@ -27,10 +24,16 @@ export default class Slide extends React.Component {
 		this.setState({clicked: false})
 	}
 	
+	remove(){
+		var id = this.props.id
+		
+		 Meteor.call('removeFavourite',id)
+	}
+	
 	
 	AddToCart(){
 		debugger;
-		var productId = this.props.id
+		var productId = this.props.ident 
 		var name = this.props.name
 		var price = this.props.price
 		var url = this.props.url
@@ -46,33 +49,8 @@ export default class Slide extends React.Component {
 		
 	}
 	
-	favourite(){
-	   debugger;
-		if(Meteor.userId()){
-		this.setState({color: true})
-		var productId = this.props.id
-		var name = this.props.name
-		var price = this.props.price
-		var url = this.props.url
-		var stock = this.props.stock
-	    var sold = this.props.sold
-		var quantity = 1
-		Meteor.call('addFavourite', name, price, url, productId, stock, quantity, sold, (err,done)=>{
-                        console.log(err,done)
-                })
-		} else {
-			this.setState({mustLogIn: true})
-		}
-		
-	}
 	
-	setColor(){
-		this.setState({color: false})
-	}
 	
-	setLogIn(){
-		this.setState({mustLogIn: false})
-	}
 	
 	
 	
@@ -82,7 +60,8 @@ export default class Slide extends React.Component {
 
 	const style = {
 		margin: "0",
-		cursor: "pointer"
+		cursor: "pointer",
+		display: "block"
 	}
 	
 	
@@ -95,29 +74,33 @@ export default class Slide extends React.Component {
 	}
 	
 	const marg = {
-		marginTop: "10px",
-		cursor: "pointer"
+		cursor: "pointer",
+		margin: "10px"
 	}
+	
+	const nomarg = {
+		margin: "0"
+	}
+	
 	
     return (
       
     
          <div>
 			
-			 
-                 <h2>{this.props.name}</h2>
+			  <img style={marg} src="/images/colorStar.png" height="50" width="50"/>
+                 <h2 style={nomarg}>{this.props.name}</h2>
 			
-			
+			     
 			  <Transition animation={animation} duration={duration} visible={visible}>
-				<img style={style} height="200" width="200" src={this.props.url} onClick={this.AddToCart.bind(this)}></img>
+				<img style={style} height="190" width="200" src={this.props.url} onClick={this.AddToCart.bind(this)}></img>
 			  </Transition>
 			<div style={marg} onClick={this.AddToCart.bind(this)} ><p style={inline}>Click to add to</p><img style={inline} src="/images/smallTrolley.png" height="20" width="20"/><p style={bold}>£{this.props.price}</p>
 			
 			</div>
-			 {this.state.color == false ?  <img style={marg} src="/images/star.png" height="20" width="20" onClick={this.favourite.bind(this)}/> : <ColorStar setColor={this.setColor.bind(this)}/>}
 			
-			 {this.state.mustLogIn == true ? <MustLogIn mustLogIn={this.setLogIn.bind(this)}/> : null}
-		     
+			
+		     <img style={marg} src="/images/delete.png" height="20" width="20" onClick={this.remove.bind(this)}/>
 			
 			{this.state.clicked == true ? <Tick
 												 changeClicked = {this.changeClicked.bind(this)}

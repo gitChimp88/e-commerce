@@ -3,6 +3,7 @@ import {Products} from './api/pics'
 import UploadImages from './UploadImages'
 import UpdateProduct from './UpdateProduct'
 import Navbar from './Navbar'
+import {Orders} from './api/orders'
 
 
 
@@ -18,7 +19,8 @@ export default class Admin extends React.Component {
 					stock: '',
 					pictures: [],
 					clicked: false,
-					id: ''
+					id: '',
+					orders: []
 				}
 			  
 			  this.setUrl = this.setUrl.bind(this)
@@ -68,6 +70,9 @@ export default class Admin extends React.Component {
 		Tracker.autorun(()=>{
 			var pictures = Products.find({}).fetch()
 			this.setState({pictures: pictures})
+			
+			var orders = Orders.find({}).fetch()
+			this.setState({orders: orders})
 		})
 	
 	}
@@ -76,7 +81,7 @@ export default class Admin extends React.Component {
 	
 	
 		setUrl(url){
-			debugger;
+			
 			this.setState({url: url})
 		}
 	
@@ -97,9 +102,9 @@ export default class Admin extends React.Component {
 				 
 			}
 	
-	updateInfo(id, name, price, category, stock){
+	updateInfo(id, name, price, category, stock, url){
 		
-		Meteor.call('updatePic', id, name, price, category, stock, (err,done)=>{
+		Meteor.call('updatePic', id, name, price, category, stock, url, (err,done)=>{
                         console.log(err,done)
                 })
 	}
@@ -148,6 +153,26 @@ export default class Admin extends React.Component {
 			margin: "20px"
 		}
 		
+		const cent = {
+			textAlign: "center"
+		}
+		
+		const inlined ={
+			display: "inline-block",
+			margin: "20px"
+		}
+		
+		const centered = {
+			textAlign: "center",
+		    margin: "30px"
+		}
+		
+		
+		
+		const bold = {
+			fontWeight: "bold",
+			fontSize: "20px"
+		}
 		
 		
 		
@@ -199,7 +224,7 @@ export default class Admin extends React.Component {
 				<h1 style={head}>Current Products</h1>
 				
 			
-				
+				<div style={cent}>
 				{this.state.pictures.map((ele, i)=>{
 					 return (
 						 <div key={i} style={centers}>
@@ -220,6 +245,38 @@ export default class Admin extends React.Component {
 							 )
 				})}
 				
+				</div>
+				
+				<hr/>
+				
+				 <h1 style={head}>Customer Orders</h1>
+				
+				 	{this.state.orders.map((ele, i)=>{
+					
+					
+				      
+						   return (
+								  <div key={i} style={centered}>
+									 
+									 <h4 style={inlined}>Quantity: {ele.quantity}</h4>
+									 <h4 style={inlined}>Product: {ele.product}</h4>
+									 <h4 style={inlined}>Indv Price: {ele.price}</h4>
+									 <h4 style={inlined}>Cost: {ele.price * ele.quantity}</h4>
+									 <img src={ele.url} height="200" width="200"/>
+								   	 <p style={bold}>Customer name: {ele.name}</p>
+								     <p style={bold}>Customer email: {ele.email}</p>
+									 <p style={bold}>Ship to: {ele.address}</p>
+									 
+									<hr/>
+					               </div>   
+						 
+							 )	 
+					  
+					
+					
+							
+						
+					})}
 				
 				
 				

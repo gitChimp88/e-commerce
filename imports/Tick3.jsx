@@ -4,7 +4,7 @@ import React from 'react'
 
 
 
-export default class Tick2 extends React.Component {
+export default class Tick3 extends React.Component {
 	
     constructor(){
 		super()
@@ -68,7 +68,7 @@ export default class Tick2 extends React.Component {
 		
 		return ( 
 			   <div style={centers}>
-					<p style={green}>Signed In! </p>
+					<p style={green}>Registered! </p>
 				 <img height="50" width="50" src="/images/checked.png"></img>
 			     </div>
 			)

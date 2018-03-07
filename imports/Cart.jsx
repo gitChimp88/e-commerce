@@ -100,7 +100,7 @@ export default class Cart extends React.Component {
 		
 		const centers = {
 			textAlign: "center",
-			marginTop: "20px"
+			marginTop: "30px"
 			
 		}
 		
@@ -135,6 +135,10 @@ export default class Cart extends React.Component {
 			
 		}
 		
+		const cents = {
+			textAlign: "center"
+		}
+		
 		
 		
 		return( 
@@ -149,6 +153,7 @@ export default class Cart extends React.Component {
 					     <h1 style={header}>Cart</h1>
 				</div>
 				
+				<div style={cents}>
 				{this.state.cart.map((ele, i)=>{
 					
 					
@@ -174,6 +179,7 @@ export default class Cart extends React.Component {
 							 )	 
 						
 					})}
+					</div>
 				
 				<h4 style={subtotal}>SubTotal: £{this.state.subtotal} </h4>
 				

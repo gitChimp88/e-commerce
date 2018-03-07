@@ -1,4 +1,5 @@
 import React from 'react'
+import UpdateImg from './UpdateImg'
 
 
 export default class UpdateProduct extends React.Component {
@@ -10,7 +11,9 @@ export default class UpdateProduct extends React.Component {
 			name: '',
 			price: '',
 			category: '',
-			stock: ''
+			stock: '',
+			url: ''
+			
 			
 			
 		}
@@ -49,6 +52,7 @@ export default class UpdateProduct extends React.Component {
 				 var price = this.state.price
 				 var category = this.state.category
 				 var stock = this.state.stock
+				 var url = this.state.url
 				 
 				 if(this.state.name == ''){
 					 name = this.props.name
@@ -58,6 +62,8 @@ export default class UpdateProduct extends React.Component {
 					category = this.props.category
 				 } if(this.state.stock == ''){
 					 stock = this.props.stock
+				 } if(this.state.url == ''){
+					 url = this.props.url
 				 }
 				 
 				 
@@ -65,12 +71,16 @@ export default class UpdateProduct extends React.Component {
 				 var clicked = this.state.clicked
 				 
 				 
-				 this.props.updateInfo(id, name, price, category, stock)
+				 this.props.updateInfo(id, name, price, category, stock, url)
 				 
 				 
 				 this.setState({clicked: !clicked})
 				 
 		}
+	
+	setIt(url){
+		this.setState({url:url})
+	}
 	
 	
 	removeInfo(){
@@ -112,6 +122,10 @@ export default class UpdateProduct extends React.Component {
 							<p style={bold}>Stock: {this.props.stock}</p>
 							 {this.state.clicked == true ? <input ref="stock" placeholder="stock" onChange={this.getInfo.bind(this)} style={block}/> : null}
 						   	 <p style={bold}>Sold: {this.props.sold}</p>
+						   
+						   {this.state.clicked == true ? <UpdateImg
+					setIt = {this.setIt.bind(this)}
+					/> : null}
 							
 							 {this.state.clicked == false ? <button onClick={this.clicked.bind(this)} className="btn btn-success">Edit</button> : <button className="btn btn-success" onClick={this.UpdateInfo.bind(this)}>Update</button> }
 							 

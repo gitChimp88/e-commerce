@@ -110,11 +110,14 @@ export default class Shop extends React.Component{
 		}
 		
 		const centered = {
-			textAlign: "center",
-			display: "inline-block",
-			margin: "20px"
+		    display: "inline-block",
+			marginLeft: "20px",
+			marginRight: "20px"
 		}
 		
+		const cents = {
+			textAlign: "center"
+		}
 		
 		
 		return( 
@@ -132,7 +135,7 @@ export default class Shop extends React.Component{
 					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>Necklaces</li>
 					<Drop2
 						 pictures = {this.state.pictures}
-						setOrder = {this.setOrder.bind(this)}
+						 setOrder = {this.setOrder.bind(this)}
 						/>
 				</ul>
 				<br/>
@@ -142,7 +145,7 @@ export default class Shop extends React.Component{
 				<div className="container-fluid">
 					
 					
-					
+					<div style={cents}>
 					{this.state.pictures.map((ele, i)=>{
 						var category = this.state.chosenCategory
 						
@@ -158,6 +161,7 @@ export default class Shop extends React.Component{
 							 id = {ele._id}
 							 chosen = {this.state.chosenCategory}
 						     sold={ele.sold}
+						     favourite={ele.favourite}
 							
 							 />
 						 </div>
@@ -174,11 +178,13 @@ export default class Shop extends React.Component{
 							 id = {ele._id}
 							 chosen = {this.state.chosenCategory}
 							 sold={ele.sold}
+						     favourite={ele.favourite}
 							 />
 						 </div>
 							 )	 
 						} 
 					})}
+						</div>
 				</div>
 				
 				

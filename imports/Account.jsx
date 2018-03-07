@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from './Navbar'
 import "./Commerce.css"
+import Tick4 from './Tick4'
 
 export default class Account extends React.Component{
 	constructor(){
@@ -10,17 +11,15 @@ export default class Account extends React.Component{
 			details: [],
 			name: '',
 			address: '',
-			email: ''
+			email: '',
+			confirm: false
 		}
 	}
 	
 	
 	componentDidMount(){
 		
-       /*
-	   
-	   this isnt working look into it
-		Tracker.autorun(()=>{
+       Tracker.autorun(()=>{
 			debugger;
 			
 			var user = Meteor.user()
@@ -29,8 +28,41 @@ export default class Account extends React.Component{
 			const email = user.emails[0].address
 			
 			this.setState({name, address, email})
-		})*/
+		})
 	
+	}
+	
+	sendEmail(e){
+		debugger;
+		
+		e.preventDefault()
+		var email = this.state.email
+		var name = this.state.name
+		
+		var title = this.refs.title.value
+		var message = this.refs.message.value
+		
+		var sendTo = "Michael Sullivan <michaelksullivan50@gmail.com>"
+		
+		if(typeof title == "string" && typeof message == "string"){
+			
+			Meteor.call('sendEmail', sendTo, email, title, message, (error, result)=>{
+				
+				if(error){
+					console.log(error)
+				} else {
+					console.log(result)
+				}
+                   this.refs.title.value = ""
+				   this.refs.message.value = ""
+				  this.setState({confirm: true})
+				})
+		}
+		
+	}
+	
+	changeConfirm(){
+		this.setState({confirm: false})	
 	}
 	
 	
@@ -53,6 +85,39 @@ export default class Account extends React.Component{
 		this.setState({update: !update})
 	}
 	
+	updateProfile(){
+		debugger;
+		var name = this.refs.name.value
+		var address = this.refs.address.value
+		var id = Meteor.userId()
+		
+		var sameAdd = this.state.address
+		var sameName = this.state.name
+		
+		if(name && address){
+			Meteor.call('updateUser', id, name, address, ()=>{
+                   this.refs.name.value = ""
+				   this.refs.address.value = ""
+				})
+		} if(name && address == ""){
+			Meteor.call('updateUser', id, name, sameAdd,  ()=>{
+                   this.refs.name.value = ""
+				})
+		
+		} if(address && name == ""){
+			
+			Meteor.call('updateUser', id, sameName, address,  ()=>{
+                   this.refs.address.value = ""
+				})
+		
+		}
+		
+		
+		
+		var update = this.state.update
+		this.setState({update: !update})
+	}
+	
 	
 	render(){
 		
@@ -68,27 +133,45 @@ export default class Account extends React.Component{
 			display: "inline-block",
 			marginBottom: "15px",
 			marginTop: "20px"
-			
-			
 		}
 		
 		const centers = {
 			textAlign: "center",
-			
-		
 		}
 		
 		const but = {
 			display: "block",
 			margin: "0 auto"
-			
 		}
 		
 		const bl = {
-			marginTop: "20px",
-			display: "block"
+			display: "block",
+			margin: "0 auto",
+			marginTop: "20px"
+         }
+		
+		const marg = {
+			marginTop: "20px"
 		}
 		
+		const header = {
+			fontSize: "42px",
+		    textAlign: "center",
+			marginBottom: "30px",
+			marginTop: "30px",
+		    fontFamily: "Raleway",
+			textDecoration: "underline"
+		}
+		
+		const boxes = {
+			    height: "35px",
+              	width: "250px",
+    			borderRadius: "5px",
+				backgroundColor: "azure",
+			    display: "block",
+			    margin: "0 auto",
+		        marginTop: "10px"
+		  }
 		
 		
 		return( 
@@ -121,22 +204,51 @@ export default class Account extends React.Component{
 				</div>
 				
 				<div className="details">
-					<h2>Details</h2>
+					<h2>Profile Details</h2>
 					<p className="marg">Name: {this.state.name}</p>
-					{this.state.update == true ? <input/> : null}
-				    <p>UserName:</p>
-					{this.state.update == true ? <input/> : null}
+					{this.state.update == true ? <input ref="name"/> : null}
+				    
 				    <p>Email: {this.state.email}</p>
-					{this.state.update == true ? <input/> : null}
+					{this.state.update == true ? <input ref="email"/> : null}
 					<p>Address: {this.state.address}</p>
-					{this.state.update == true ? <input/> : null}
-				    <p>Phone:</p>
-					{this.state.update == true ? <input/> : null}
-					{this.state.update == false ? <button style={bl} className="btn btn-success" onClick={this.updateState.bind(this)}>Update details</button> : <button className="btn btn-success" style={bl} onClick={this.updateState.bind(this)}>Submit</button> }
+					{this.state.update == true ? <input ref="address"/> : null}
+				    
+					{this.state.update == false ? <button style={bl} className="btn btn-success" onClick={this.updateState.bind(this)}>Update details</button> : <button className="btn btn-success" style={bl} onClick={this.updateProfile.bind(this)}>Submit</button> }
 				</div>
 				
 				
+				<hr/>
 				
+				<div style={centers}>
+							<img src="/images/email.png"/>
+					        <h1 style={header}>Send us an email!</h1>
+					
+					     <div class="row">
+				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3">
+					  <form>
+						  <div className="form-group">
+							 
+							
+							 
+							  <input ref="title" className="form-control" type="text"    placeholder="Subject"/>
+						  </div>                            
+						  <div className="form-group">
+							  
+							  <textarea ref="message" className="form-control" rows="5" cols="50"   placeholder="Message..."></textarea>                                 
+						  </div>
+						  <div className="text-center">
+							  {this.state.confirm == false ? <button type="submit" className="btn btn-start-order" onClick={this.sendEmail.bind(this)}>Send Message</button> : <Tick4 changeConfirm={this.changeConfirm.bind(this)}/>}
+							  
+							  
+						  </div>
+					  </form>
+				  </div>
+			  </div>
+					
+						
+					<br/>
+					<br/>
+				</div>
 				
 				
 			</div>
