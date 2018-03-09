@@ -4,6 +4,9 @@ import "./Commerce.css"
 import Drop2 from './Drop2'
 import IndividualProduct from './IndividualProduct'
 import {Products} from './api/pics'
+import FlipMove from 'react-flip-move'
+import {Category} from './api/category'
+
 
 export default class Shop extends React.Component{
 	
@@ -13,6 +16,7 @@ export default class Shop extends React.Component{
 			pictures: [],
 			chosenCategory: 'All Items',
 			order: false,
+			categories: []
 		
 			
 		}
@@ -38,6 +42,9 @@ export default class Shop extends React.Component{
 		Tracker.autorun(()=>{
 			var pictures = Products.find({}).fetch()
 			this.setState({pictures: pictures})
+			
+			var categories = Category.find({}).fetch()
+			this.setState({categories: categories})
 		})
 	
 	}
@@ -130,9 +137,17 @@ export default class Shop extends React.Component{
 				
 				<ul className="text-center">
 					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>All Items</li>
-					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>Rings</li>
-					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>Bracelets</li>
-					<li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>Necklaces</li>
+					{this.state.categories.map((ele, i)=>{
+						
+						
+						
+							 return (
+						        <li style={style} className="changes" onClick={this.chooseCategory.bind(this)}>{ele.name}</li>
+							 )	 
+					})}
+					
+					
+					
 					<Drop2
 						 pictures = {this.state.pictures}
 						 setOrder = {this.setOrder.bind(this)}
@@ -146,12 +161,13 @@ export default class Shop extends React.Component{
 					
 					
 					<div style={cents}>
+					<FlipMove>
 					{this.state.pictures.map((ele, i)=>{
 						var category = this.state.chosenCategory
 						
 						if(category == "All Items"){
 							 return (
-						 <div key={i} style={centered}>
+						 <div  style={centered}>
 							  <IndividualProduct
 							 url = {ele.url}
 							 name = {ele.name}
@@ -162,13 +178,15 @@ export default class Shop extends React.Component{
 							 chosen = {this.state.chosenCategory}
 						     sold={ele.sold}
 						     favourite={ele.favourite}
+							 description = {ele.description}
+						     key={i}
 							
 							 />
 						 </div>
 							 )	 
 						} else if(category == ele.category){
 								 return (
-						 <div key={i} style={centered}>
+						 <div style={centered}>
 							  <IndividualProduct
 							 url = {ele.url}
 							 name = {ele.name}
@@ -179,11 +197,14 @@ export default class Shop extends React.Component{
 							 chosen = {this.state.chosenCategory}
 							 sold={ele.sold}
 						     favourite={ele.favourite}
+						     description = {ele.description}
+							  key={i}
 							 />
 						 </div>
 							 )	 
 						} 
 					})}
+					</FlipMove>
 						</div>
 				</div>
 				

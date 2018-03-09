@@ -1,5 +1,6 @@
 import React from 'react'
 import UpdateImg from './UpdateImg'
+import Modal2 from './Modal2'
 
 
 export default class UpdateProduct extends React.Component {
@@ -12,7 +13,9 @@ export default class UpdateProduct extends React.Component {
 			price: '',
 			category: '',
 			stock: '',
-			url: ''
+			url: '',
+			description: '',
+			reveal: false
 			
 			
 			
@@ -34,15 +37,22 @@ export default class UpdateProduct extends React.Component {
 		var price = this.refs.price.value 
 		var category = this.refs.category.value
 		var stock = this.refs.stock.value
+		var description = this.refs.description.value
 		
 		
 		this.setState({name: name})
 		this.setState({price: price})
 		this.setState({category: category})
 		this.setState({stock: stock})
+		this.setState({description: description})
 		
 	}
 	
+	
+	reveal(){
+		var reveal = this.state.reveal
+		this.setState({reveal: !reveal})
+	}
 	
 	
 			 UpdateInfo(e){
@@ -53,6 +63,7 @@ export default class UpdateProduct extends React.Component {
 				 var category = this.state.category
 				 var stock = this.state.stock
 				 var url = this.state.url
+				 var description = this.state.description
 				 
 				 if(this.state.name == ''){
 					 name = this.props.name
@@ -64,6 +75,8 @@ export default class UpdateProduct extends React.Component {
 					 stock = this.props.stock
 				 } if(this.state.url == ''){
 					 url = this.props.url
+				 } if(this.state.description == ''){
+				      description = this.state.description	
 				 }
 				 
 				 
@@ -71,7 +84,7 @@ export default class UpdateProduct extends React.Component {
 				 var clicked = this.state.clicked
 				 
 				 
-				 this.props.updateInfo(id, name, price, category, stock, url)
+				 this.props.updateInfo(id, name, price, category, stock, url, description)
 				 
 				 
 				 this.setState({clicked: !clicked})
@@ -119,13 +132,24 @@ export default class UpdateProduct extends React.Component {
 							{this.state.clicked == true ? <input ref="price" placeholder="price" onChange={this.getInfo.bind(this)}/> : null}
 							<p style={bold}>Category: {this.props.category}</p>
 							{this.state.clicked == true ? <input ref="category" placeholder="category" onChange={this.getInfo.bind(this)}/> : null}
+						      
+						   
+						   {this.state.clicked == true ? <p style={bold}>Description</p> : <button style={bold} onClick={this.reveal.bind(this)}>Show Description</button> }
+						    
+						   
+						   { this.state.reveal == true ? <Modal2 tog={this.reveal.bind(this)} description={this.props.description}/> : null}
+						   
+							{this.state.clicked == true ? <textarea ref="description" placeholder="description" onChange={this.getInfo.bind(this)}  ></textarea>  : null}
+						   
+						   
 							<p style={bold}>Stock: {this.props.stock}</p>
 							 {this.state.clicked == true ? <input ref="stock" placeholder="stock" onChange={this.getInfo.bind(this)} style={block}/> : null}
+						     
 						   	 <p style={bold}>Sold: {this.props.sold}</p>
 						   
-						   {this.state.clicked == true ? <UpdateImg
-					setIt = {this.setIt.bind(this)}
-					/> : null}
+							   {this.state.clicked == true ? <UpdateImg
+						setIt = {this.setIt.bind(this)}
+						/> : null}
 							
 							 {this.state.clicked == false ? <button onClick={this.clicked.bind(this)} className="btn btn-success">Edit</button> : <button className="btn btn-success" onClick={this.UpdateInfo.bind(this)}>Update</button> }
 							 

@@ -64,9 +64,15 @@
     text-transform: uppercase;
     transition: all 0.25s ease 0s;
 }
+
 .btn-start-order:hover,.btn-start-order:active, .btn-start-order:focus {
 	background-color: black;
 	color: white;
+}
+
+.hov:hover {
+	text-decoration: underline;
+	
 }
 
 

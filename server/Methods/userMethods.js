@@ -4,24 +4,25 @@ import {Accounts}       from 'meteor/accounts-base'
 import { Starred }   from '../../imports/api/favourites'
 import {Orders} from '../../imports/api/orders'
 import { Email } from 'meteor/email'
+import {Category} from '../../imports/api/category'
 
 
 
 
 Meteor.methods({
 	
-	addPic: function(url, name, price, category, stock, sold){
+	addPic: function(url, name, price, category, stock, sold, description){
 			
-                console.log("addPic meteor method called from the server", url, name, price, category, stock, sold)
+                console.log("addPic meteor method called from the server", url, name, price, category, stock, sold, description)
 		
-                Products.insert({url, name, price, category, stock, sold},(err,done)=>{
+                Products.insert({url, name, price, category, stock, sold, description},(err,done)=>{
                         console.log(err + " id = " + done)
                 })
         },
 	
-	updatePic:function(id, name, price, category, stock, url){
+	updatePic:function(id, name, price, category, stock, url, description){
 			  console.log("updatePic meteor method the id is = ", id)
-			  Products.update({_id:id},{ $set:{ name:name, price:price, category:category, stock:stock, url:url }
+			  Products.update({_id:id},{ $set:{ name:name, price:price, category:category, stock:stock, url:url, description:description }
 			  })
 		},
 	
@@ -93,7 +94,16 @@ Meteor.methods({
 		  
 
    
-  }
+  },
+	
+	addCategory: function(name){
+			
+                console.log("addCategory meteor method called from the server", name)
+		
+                Category.insert({name},(err,done)=>{
+                        console.log(err + " id = " + done)
+                })
+        },
 	
 		
 		

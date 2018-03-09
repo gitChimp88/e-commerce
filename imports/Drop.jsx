@@ -76,9 +76,11 @@ export default class Drop extends React.Component {
         
        {this.state.loggedIn == true ? <Dropdown.Item onClick={this.handle.bind(this)}>My Account</Dropdown.Item> : null }
         
-        <Dropdown.Item onClick={this.handle.bind(this)}>Sign In</Dropdown.Item>
+		  {this.state.loggedIn == true ? null :  <Dropdown.Item onClick={this.handle.bind(this)}>Sign In</Dropdown.Item>}
+        
         <Dropdown.Divider />
-        <Dropdown.Item onClick={this.handleClick.bind(this)}>Sign out</Dropdown.Item>
+		  {this.state.loggedIn == true ?  <Dropdown.Item onClick={this.handleClick.bind(this)}>Sign out</Dropdown.Item> : null}
+       
 		<Dropdown.Divider />
 	    {this.state.admin == true ? <Dropdown.Item onClick={this.handle.bind(this)}>Admin</Dropdown.Item> : null}
         

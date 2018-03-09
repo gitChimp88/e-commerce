@@ -2,7 +2,7 @@ import React from 'react'
 import {Products} from './api/pics'
 import {ShoppingCart} from './api/ShoppingCart'
 import CartProduct from './CartProduct'
-
+import FlipMove from 'react-flip-move';
 import Navbar from './Navbar'
 
 export default class Cart extends React.Component {
@@ -154,6 +154,7 @@ export default class Cart extends React.Component {
 				</div>
 				
 				<div style={cents}>
+					<FlipMove>
 				{this.state.cart.map((ele, i)=>{
 					
 					
@@ -179,6 +180,7 @@ export default class Cart extends React.Component {
 							 )	 
 						
 					})}
+						</FlipMove>
 					</div>
 				
 				<h4 style={subtotal}>SubTotal: £{this.state.subtotal} </h4>

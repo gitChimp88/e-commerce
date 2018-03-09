@@ -4,6 +4,7 @@ import {ShoppingCart} from './api/ShoppingCart'
 import Tick from './Tick'
 import ColorStar from './ColorStar'
 import MustLogIn from './MustLogIn'
+import Modal from './Modal'
 
 
 
@@ -17,7 +18,8 @@ export default class Slide extends React.Component {
 		this.state = {
 			animation: transitions[4], duration: 1000, visible: true,
 		    color: false,
-			mustLogIn: false
+			mustLogIn: false,
+			modal: false
 		}
 		
 	}
@@ -25,6 +27,11 @@ export default class Slide extends React.Component {
 	
    changeClicked(){
 		this.setState({clicked: false})
+	}
+	
+	modal(){
+		var modal = this.state.modal
+		this.setState({modal:!modal})
 	}
 	
 	
@@ -109,11 +116,18 @@ export default class Slide extends React.Component {
 			
 			
 			  <Transition animation={animation} duration={duration} visible={visible}>
-				<img style={style} height="200" width="200" src={this.props.url} onClick={this.AddToCart.bind(this)}></img>
+				<img style={style} height="200" width="200" src={this.props.url} onClick={this.modal.bind(this)} ></img>
 			  </Transition>
-			<div style={marg} onClick={this.AddToCart.bind(this)} ><p style={inline}>Click to add to</p><img style={inline} src="/images/smallTrolley.png" height="20" width="20"/><p style={bold}>£{this.props.price}</p>
+			<div style={marg} onClick={this.AddToCart.bind(this)}><p className="hov" style={inline}>Click to add to</p><img style={inline} src="/images/smallTrolley.png" height="20" width="20"/><p style={bold}>£{this.props.price}</p>
 			
 			</div>
+			{this.state.modal == true ? <Modal 
+											togg={this.modal.bind(this)}
+											url={this.props.url}
+											price={this.props.price}
+											name={this.props.name}
+											description={this.props.description}
+											/> : null}
 			 {this.state.color == false ?  <img style={marg} src="/images/star.png" height="20" width="20" onClick={this.favourite.bind(this)}/> : <ColorStar setColor={this.setColor.bind(this)}/>}
 			
 			 {this.state.mustLogIn == true ? <MustLogIn mustLogIn={this.setLogIn.bind(this)}/> : null}

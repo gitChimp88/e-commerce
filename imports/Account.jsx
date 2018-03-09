@@ -17,17 +17,21 @@ export default class Account extends React.Component{
 	}
 	
 	
-	componentDidMount(){
+	componentWillMount(){
 		
        Tracker.autorun(()=>{
+		   var user =  Meteor.users.find({_id:Meteor.userId()}).fetch()
+		   
 			debugger;
-			
 			var user = Meteor.user()
-			const name = user.profile.name
-		    const address = user.profile.address
-			const email = user.emails[0].address
+			if(user){	
+				debugger
+				const name = user.profile.name
+		    	const address = user.profile.address
+				const email = user.emails[0].address
 			
-			this.setState({name, address, email})
+				this.setState({name, address, email})
+			}
 		})
 	
 	}

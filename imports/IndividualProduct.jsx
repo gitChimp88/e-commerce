@@ -36,6 +36,7 @@ export default class IndividualProduct extends React.Component {
 								stock={this.props.stock}
 								sold={this.props.sold}
 								favourite={this.props.favourite}
+								description={this.props.description}
 								/>
 						</div>
 				

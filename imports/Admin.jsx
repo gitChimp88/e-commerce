@@ -4,6 +4,9 @@ import UploadImages from './UploadImages'
 import UpdateProduct from './UpdateProduct'
 import Navbar from './Navbar'
 import {Orders} from './api/orders'
+import FlipMove from 'react-flip-move'
+import {Category} from './api/category'
+import Tick5 from './Tick5'
 
 
 
@@ -20,7 +23,12 @@ export default class Admin extends React.Component {
 					pictures: [],
 					clicked: false,
 					id: '',
-					orders: []
+					orders: [],
+					reveal: false,
+					categories: [],
+					newCategory: '',
+					confirmation: false,
+					description: ''
 				}
 			  
 			  this.setUrl = this.setUrl.bind(this)
@@ -34,28 +42,61 @@ export default class Admin extends React.Component {
 		var price = this.state.price
 		var category = this.state.category
 		var stock = this.state.stock
+		var description = this.state.description
 		var sold = 0
 		
-		if(url && name && price && category && stock){
+		if(url && name && price && category && stock && description){
             //first we check that we have a todo to submit/insert
 		
-               Meteor.call('addPic', url, name, price, category, stock, sold, ()=>{
+               Meteor.call('addPic', url, name, price, category, stock, sold, description, ()=>{
                
 				    this.refs.name.value = ""
 				    this.refs.price.value = ""
 				    this.refs.category.value = ""
 				   	this.refs.stock.value = ""
+				    this.refs.description.value = ""
 				    this.setState({url:''})
                     this.setState({name:''})
 				    this.setState({price:''})
 				    this.setState({category:''})
 				    this.setState({stock:''})
+				    this.setState({description: ''})
 				//  inside the callback we clear our input and our state.
                })
+			  this.setState({confirmation: true})
             }
+		  
 		}
 	
+	reveal(){
+		var reveal = this.state.reveal
+		this.setState({reveal: !reveal})
+	}
 	
+	setCategory(){
+		debugger;
+		var newCategory = this.refs.newCategory.value
+		this.setState({newCategory: newCategory})
+	}
+	
+	addCategory(){
+		
+		var name = this.state.newCategory;
+		
+		if(name){
+			Meteor.call('addCategory', name, ()=>{
+               
+				    
+				    this.refs.newCategory.value = ""
+				    this.setState({newCategory:''})
+			 		this.setState({reveal: false})
+				  
+				//  inside the callback we clear our input and our state.
+               })
+			
+		}
+		 
+	}
 	
 	clicked(){
 		var clicked = this.state.clicked
@@ -73,6 +114,9 @@ export default class Admin extends React.Component {
 			
 			var orders = Orders.find({}).fetch()
 			this.setState({orders: orders})
+			
+			var categories = Category.find({}).fetch()
+			this.setState({categories: categories})
 		})
 	
 	}
@@ -83,6 +127,7 @@ export default class Admin extends React.Component {
 		setUrl(url){
 			
 			this.setState({url: url})
+			
 		}
 	
 			 getInfo(e){
@@ -93,18 +138,26 @@ export default class Admin extends React.Component {
 				 var price = this.refs.price.value
 				 var category = this.refs.category.value
 				 var stock = this.refs.stock.value
+				 var description = this.refs.description.value
 				 
 					
 				    this.setState({name:name})
 				    this.setState({price:price})
 				    this.setState({category:category})
 				 	this.setState({stock:stock})
+				 	this.setState({description:description})
+				
 				 
 			}
 	
-	updateInfo(id, name, price, category, stock, url){
+	changeConfirm(){
+		debugger;
+		this.setState({confirmation: false})
+	}
+	
+	updateInfo(id, name, price, category, stock, url, description){
 		
-		Meteor.call('updatePic', id, name, price, category, stock, url, (err,done)=>{
+		Meteor.call('updatePic', id, name, price, category, stock, url, description, (err,done)=>{
                         console.log(err,done)
                 })
 	}
@@ -175,7 +228,10 @@ export default class Admin extends React.Component {
 		}
 		
 		
-		
+		const plus = {
+			marginLeft: "5px",
+			cursor: "pointer"
+		}
 		
 		
 		
@@ -206,18 +262,40 @@ export default class Admin extends React.Component {
 				
 				    <div>
 						<h4 style={inline}>Category</h4>
-					    <input ref="category" onChange={this.getInfo.bind(this)} placeholder="category" style={boxes}/>
+					    
+						<select name="categories" ref="category" onChange={this.getInfo.bind(this)} placeholder="category" style={boxes}>
+							{this.state.categories.map((ele, i)=>{
+					 return (
+						 
+							<option key={i}>{ele.name}</option>
+						 
+						
+						
+							 )
+				})}
+						
+						
+					  </select>
+						<img src="/images/plus.png" style={plus} onClick={this.reveal.bind(this)}/>
+						{this.state.reveal == true ? <div> <input ref="newCategory" onChange={this.setCategory.bind(this)}/><button onClick={this.addCategory.bind(this)}>Add category</button></div> : null}
+						
 				    </div>
 					
+					<div>
+						<h4 style={inline}>Description</h4>
+					    <textarea ref="description" onChange={this.getInfo.bind(this)} placeholder="" style={boxes}></textarea>    
+				    </div>
+				
 					 <div>
 						<h4 style={inline}>Stock</h4>
 					    <input ref="stock" onChange={this.getInfo.bind(this)} placeholder="stock" style={boxes}/>
+						 
 				    </div>
 					
 				    
 				    
+						{this.state.confirmation == false ? <button onClick={this.addPics.bind(this)} className="btn btn-success" style={marg}>Upload Product</button> : <Tick5 changeConfirm={this.changeConfirm.bind(this)}/>}
 						
-						<button onClick={this.addPics.bind(this)} className="btn btn-success" style={marg}>Upload Product</button>
 				<br/>
 				<hr/>
 				
@@ -225,6 +303,7 @@ export default class Admin extends React.Component {
 				
 			
 				<div style={cent}>
+					<FlipMove>
 				{this.state.pictures.map((ele, i)=>{
 					 return (
 						 <div key={i} style={centers}>
@@ -238,13 +317,14 @@ export default class Admin extends React.Component {
 							 updateInfo = {this.updateInfo.bind(this)}
 						     handleRemove = {this.handleRemove.bind(this)}
 							 sold = {ele.sold}
+							 description = {ele.description}
 							 />
 						 </div>
 						
 						
 							 )
 				})}
-				
+				</FlipMove>
 				</div>
 				
 				<hr/>

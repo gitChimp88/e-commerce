@@ -29,7 +29,7 @@ export default class UploadImages extends React.Component{
 					var url = result[0].secure_url
 					this.setState({url: url})
 					this.props.setUrl(this.state.url)
-					this.props.setIt(this.state.url)
+					
                 }
             }.bind(this));
 			
