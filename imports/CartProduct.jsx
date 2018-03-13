@@ -98,7 +98,7 @@ export default class CartProduct extends React.Component {
 							  <h5 style={inline}>Quantity: {this.props.quantity}</h5>	
 								<img style={cursor} src="/images/plus.png" onClick={this.addQuantity.bind(this)}/>
 				
-							   <h5>Stock: {this.props.stock}</h5>
+							   
 								<img style={block} src="/images/delete.png" height="50" width="50" onClick={this.handleRemove.bind(this)}/>
 					            
 				              

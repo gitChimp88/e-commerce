@@ -1,7 +1,7 @@
 import React from 'react'
 import {Starred} from './api/favourites'
 import IndividualFavour from './IndividualFavour'
-
+import FlipMove from 'react-flip-move'
 import Navbar from './Navbar'
 
 export default class Favourites extends React.Component {
@@ -95,6 +95,7 @@ export default class Favourites extends React.Component {
 				
 				
 				<div style={cents}>
+					<FlipMove>
 				{this.state.favourites.map((ele, i)=>{
 					
 					
@@ -121,6 +122,7 @@ export default class Favourites extends React.Component {
 							
 						
 					})}
+						</FlipMove>
 					</div>
 				
 				

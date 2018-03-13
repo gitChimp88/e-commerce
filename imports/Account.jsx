@@ -227,8 +227,8 @@ export default class Account extends React.Component{
 							<img src="/images/email.png"/>
 					        <h1 style={header}>Send us an email!</h1>
 					
-					     <div class="row">
-				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3">
+					     <div className="row">
+				  <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3">
 					  <form>
 						  <div className="form-group">
 							 

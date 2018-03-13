@@ -3,6 +3,7 @@ import {Products} from './api/pics'
 import {ShoppingCart} from './api/ShoppingCart'
 import {Orders} from './api/orders'
 import StripeCheckout from 'react-stripe-checkout';
+
 import "./Commerce.css"
 
 
@@ -26,9 +27,9 @@ export default class Checkout extends React.Component {
 					customerAddress: '',
 					name: '',
 					email: '',
-					address: ''
-					
+					address: '',
 				}
+			  
 		this.checkOut = this.checkOut.bind(this)
 	}
 	
@@ -45,15 +46,14 @@ export default class Checkout extends React.Component {
 	
 	
 	componentWillMount(){
-        debugger;
+      
 		Tracker.autorun(()=>{
 			var cart = ShoppingCart.find({}).fetch()
 			this.setState({cart: cart})
 			
-		})
-		
-		var user = Meteor.user()
-		if(user != null){
+			
+			var user = Meteor.user()
+		    if(user){
 			this.setState({signedIn: true})
 			var user = Meteor.user()
 			const customerName = user.profile.name
@@ -63,14 +63,15 @@ export default class Checkout extends React.Component {
 			this.setState({customerName, customerAddress, customerEmail})
 			
 		}
+			
+		})
+		
+		
 		
 	}
 	
-	
-	
-	
 	componentDidMount(){
-		debugger;
+	
 		const cart = this.state.cart
 		cart.map((item)=>{
 			var total = this.state.subtotal
@@ -88,7 +89,7 @@ export default class Checkout extends React.Component {
 	
 	
     onToken(token, amount){
-		debugger;
+		
 		amount = this.props.location.state.subtotal;
       Meteor.call(
           'StripeChargeMethod',
@@ -98,15 +99,16 @@ export default class Checkout extends React.Component {
           (err,data)=>{ 
              if(err){
              //as always place a debugger here so that you can see what the error is
-               debugger
+            
 			   console.log('error')
              }else if(data){
              //debugger to check the data
+			
                 if(data.status == "succeeded"){
                   console.log('success, update stock')
 				 this.checkOut()
             }else if(data.type =='StripeInvalidRequestError'){
-				debugger;
+			
                   console.log('invalid request')
              }
             }
@@ -131,7 +133,7 @@ export default class Checkout extends React.Component {
 		//this updates stock and clears the cart, should be activated after payment
 		
 		console.log("called from successful payment, update stock")
-		debugger;
+		
 		
 		const cart = this.state.cart
 		cart.map((item)=>{
@@ -174,19 +176,17 @@ export default class Checkout extends React.Component {
 			
 			
 		})
+		       var url = "/Confirmation"
 		
-		if(Meteor.userId()){
 				this.props.history.push({
-				pathname: "/orders",
+				pathname: url,
 			 })
-		} else {
-				this.props.history.push({
-				pathname: "/",
-			 })
-		}
-			
+		 
 		
 	}
+	
+	
+	
 	
 	
      
@@ -255,10 +255,11 @@ export default class Checkout extends React.Component {
 			
 		}
 		
-		
+				
+	
 		
 		return( 
-			
+	
 			<div>
 				
 				
@@ -319,19 +320,14 @@ export default class Checkout extends React.Component {
 						email       =  {this.state.customerEmail}
 						currency    = "GBP"
 						/>
+					
 				    <button className="btn btn-success" style={but} onClick={this.handle.bind(this)}>Back</button>
 					
 				</div>
 				
-			  
-			    
-				
-				
-				
-				
-					
-			</div>
+			 </div>
 			
 		)
-	}
+	
+  }
 }

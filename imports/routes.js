@@ -12,6 +12,7 @@ import OrderHistory from './OrderHistory'
 import Favourites from './Favourites'
 import Admin from './Admin'
 import Checkout from './Checkout'
+import Confirmation from './Confirmation'
 
 
 const routes    = () => {
@@ -28,6 +29,7 @@ const routes    = () => {
 	  <Route path   = "/Favourites"       component = {Favourites}/>
 	  <Route path   = "/Admin"            component = {Admin}/>
 	  <Route path   = "/Checkout"         component = {Checkout}/>
+	  <Route path   = "/Confirmation"     component = {Confirmation}/>
 	
 	</div>
          </Router>
