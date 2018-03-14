@@ -123,12 +123,7 @@ export default class Account extends React.Component{
 	}
 	
 	     
-	change(){
-		
-		var id = Meteor.userId();
-		var role = "admin"
-		Meteor.call('createRole', id, role)
-	}
+	
 	
 	
 	render(){
@@ -193,7 +188,7 @@ export default class Account extends React.Component{
 					/>
 				<h1 style={head}>My Account</h1>
 				
-				<button onClick={this.change.bind(this)}>create admin</button>
+				
 				
 				<div className="row">
 					<div className="col-md-4 col-sm-4">
