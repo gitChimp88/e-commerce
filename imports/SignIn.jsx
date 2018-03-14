@@ -53,10 +53,10 @@ export default class SignIn extends React.Component{
         
 	change(){
 		
-		
+		/*
 		var id = Meteor.userId();
 		var role = "admin"
-		Meteor.call('createRole', id, role)
+		Meteor.call('createRole', id, role)*/
 	}
 	
 	
@@ -178,7 +178,7 @@ export default class SignIn extends React.Component{
 					{this.state.success == true ? <Tick2 changeClicked={this.changeClick.bind(this)}/> : <button onClick={this.handleSubmit.bind(this)} className="btn btn-success" style={but}>Sign In</button>}
 					{this.state.invalid == true ? <Invalid changeInvalid={this.changeInvalid.bind(this)}/> : null}
 					
-					<button onClick={this.change.bind(this)}>make admin</button>
+					
 				</div>
 				
 				
