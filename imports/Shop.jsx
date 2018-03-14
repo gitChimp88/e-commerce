@@ -22,8 +22,7 @@ export default class Shop extends React.Component{
 		}
 	}
 	
-	
-	 clicker(e){
+	clicker(e){
 	   debugger;
 		var name = e.target.textContent
 		

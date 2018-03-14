@@ -3,7 +3,6 @@ import {Products} from './api/pics'
 import {ShoppingCart} from './api/ShoppingCart'
 import {Orders} from './api/orders'
 import StripeCheckout from 'react-stripe-checkout';
-
 import "./Commerce.css"
 
 
