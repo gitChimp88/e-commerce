@@ -17,5 +17,12 @@ system, order history and favourites for customer. ability to sort products by p
 
 https://e-commerce-.herokuapp.com/
 
+## To clone follow instructions below -
+
+git clone repo
+
+meteor npm install --save @babel/runtime react react-dom react-router-dom
+semantic-ui-react react-flip-move react-stripe-checkout
+
 
 
